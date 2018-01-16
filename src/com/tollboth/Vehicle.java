@@ -15,6 +15,9 @@ public interface Vehicle {
 	    MILITARY;
 		
 	    public boolean isFree(){
+	    	/*
+			 * Business requirements taken from original code.
+			 */
 			switch (this) {
 			case MOTORBIKE:
 				return true;

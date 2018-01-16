@@ -1,5 +1,6 @@
 package com.tollboth.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import com.tollboth.Database;
@@ -7,6 +8,7 @@ import com.tollboth.ExternalApiForVehicleInformation;
 import com.tollboth.Tollboth;
 import com.tollboth.Vehicle;
 import com.tollboth.model.Bill;
+import com.tollboth.model.FreedayHelper;
 
 public class TollBothImpl implements Tollboth {
 	private final Database mDb;
@@ -43,16 +45,29 @@ public class TollBothImpl implements Tollboth {
 		}
 
 		Vehicle v = mVehicleApi.getVehicleForLicensePlate(licensePlate);
+		if (v == null) {
+			throw new IllegalArgumentException("licensePlate is not valid");
+		}
+		
 		List<Long> passings = mDb.getPassingsForVehicle(licensePlate);
 		Bill bill = new Bill(v);
+		
 		if (v.getType().isFree()) {
-			// Add all passings with a cost of zero since this is a free vehicle.
+			// Add all passings with a cost of zero since this is a free
+			// vehicle.
 			for (long timestamp : passings) {
 				bill.registerPassing(timestamp, 0);
 			}
 		} else {
+			long lastPayedTimestamp = -1;
 			for (long timestamp : passings) {
-				bill.registerPassing(timestamp, 0);
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(timestamp);
+				if (FreedayHelper.isDayFree(cal)) {
+					bill.registerPassing(timestamp, 0);
+				} else {
+
+				}
 			}
 		}
 		// for each timestamp
@@ -65,31 +80,4 @@ public class TollBothImpl implements Tollboth {
 		return null;
 	}
 
-	private boolean isVehicleFree(Vehicle v) {
-		/*
-		 * Business requirements taken from original code.
-		 */
-		switch (v.getType()) {
-		case MOTORBIKE:
-			return true;
-
-		case TRACTOR:
-			return true;
-
-		case EMERGENCY:
-			return true;
-
-		case DIPLOMAT:
-			return true;
-
-		case FOREIGN:
-			return true;
-
-		case MILITARY:
-			return true;
-
-		default:
-			return false;
-		}
-	}
 }
