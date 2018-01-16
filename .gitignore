@@ -1,0 +1,17 @@
+/.gradle/
+/reports/
+/generated/
+/build/
+*.class
+
+# eclipse specific git ignore
+.metadata
+bin/**
+tmp/**
+*.tmp
+*.bak
+*.swp
+local.properties
+.settings/
+.loadpath
+.recommenders/
