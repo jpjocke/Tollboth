@@ -1,8 +1,10 @@
 package com.tollboth;
 
 public interface Vehicle {
+	public String getLicensePlate();
+
 	public Type getType();
-	
+
 	public enum Type {
 		CAR,
 		MOTORBIKE,
@@ -10,25 +12,31 @@ public interface Vehicle {
 	    EMERGENCY,
 	    DIPLOMAT,
 	    FOREIGN,
-	    MILITARY
-		/*
-		private enum TollFreeVehicles {
-		    MOTORBIKE("Motorbike"),
-		    TRACTOR("Tractor"),
-		    EMERGENCY("Emergency"),
-		    DIPLOMAT("Diplomat"),
-		    FOREIGN("Foreign"),
-		    MILITARY("Military");
-		    private final String type;
+	    MILITARY;
+		
+	    public boolean isFree(){
+			switch (this) {
+			case MOTORBIKE:
+				return true;
 
-		    TollFreeVehicles(String type) {
-		      this.type = type;
-		    }
+			case TRACTOR:
+				return true;
 
-		    public String getType() {
-		      return type;
-		    }
-		  }
-		  */
+			case EMERGENCY:
+				return true;
+
+			case DIPLOMAT:
+				return true;
+
+			case FOREIGN:
+				return true;
+
+			case MILITARY:
+				return true;
+
+			default:
+				return false;
+			}
+		}
 	}
 }

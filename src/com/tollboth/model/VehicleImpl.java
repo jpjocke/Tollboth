@@ -7,6 +7,12 @@ public class VehicleImpl implements Vehicle {
 	private final Type mType;
 
 	public VehicleImpl(String licensePlate, Type vehicleType) {
+		if (licensePlate == null) {
+			throw new IllegalArgumentException("licensePlate must be set");
+		}
+		if (vehicleType == null) {
+			throw new IllegalArgumentException("vehicleType must be set");
+		}
 		this.mLicensePlate = licensePlate;
 		this.mType = vehicleType;
 	}
@@ -16,4 +22,13 @@ public class VehicleImpl implements Vehicle {
 		return mType;
 	}
 
+	@Override
+	public String getLicensePlate() {
+		return mLicensePlate;
+	}
+
+	@Override
+	public String toString(){
+		return mLicensePlate + " of type: " + mType;
+	}
 }
