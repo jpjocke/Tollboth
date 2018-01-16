@@ -48,28 +48,30 @@ public class TollBothImpl implements Tollboth {
 		if (v == null) {
 			throw new IllegalArgumentException("licensePlate is not valid");
 		}
-		
+
 		List<Long> passings = mDb.getPassingsForVehicle(licensePlate);
 		Bill bill = new Bill(v);
-		
+
 		if (v.getType().isFree()) {
 			// Add all passings with a cost of zero since this is a free
 			// vehicle.
 			for (long timestamp : passings) {
 				bill.registerPassing(timestamp, 0);
 			}
-		} else {
-			long lastPayedTimestamp = -1;
-			for (long timestamp : passings) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(timestamp);
-				if (FreedayHelper.isDayFree(cal)) {
-					bill.registerPassing(timestamp, 0);
-				} else {
+			return bill;
+		}
 
-				}
+		long lastPayedTimestamp = -1;
+		for (long timestamp : passings) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(timestamp);
+			if (FreedayHelper.isDayFree(cal)) {
+				bill.registerPassing(timestamp, 0);
+			} else {
+
 			}
 		}
+
 		// for each timestamp
 		// is day free?
 		// keep last billable passing
