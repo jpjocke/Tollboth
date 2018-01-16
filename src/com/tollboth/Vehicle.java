@@ -1,4 +1,4 @@
-package com.tollboth.model;
+package com.tollboth;
 
 public interface Vehicle {
 	public Type getType();
