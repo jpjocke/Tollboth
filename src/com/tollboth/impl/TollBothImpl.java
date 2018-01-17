@@ -100,31 +100,33 @@ public class TollBothImpl implements Tollboth {
 		// keep track of the last payed passing since we can only debit once a
 		// hour.
 		long lastPayedTimestamp = -1;
+		Calendar cal = Calendar.getInstance();
 		for (long timestamp : passings) {
-			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(timestamp);
 			if (FreedayHelper.isDayFree(cal)) {
 				// Free days costs zero.
 				bill.registerPassing(timestamp, 0);
+				continue;
+			}
+			
+			boolean isSameHour = false;
+			if (lastPayedTimestamp == -1) {
+				lastPayedTimestamp = timestamp;
 			} else {
-				boolean isSameHour = false;
-				if (lastPayedTimestamp == -1) {
+				if (lastPayedTimestamp + FREE_HOUR > timestamp) {
+					isSameHour = true;
+				} else {
 					lastPayedTimestamp = timestamp;
-				} else {
-					if (lastPayedTimestamp + FREE_HOUR > timestamp) {
-						isSameHour = true;
-					} else {
-						lastPayedTimestamp = timestamp;
-					}
-				}
-				if (!isSameHour) {
-					bill.registerPassing(timestamp, DayCostHelper.getCostForTime(cal));
-				} else {
-					// If the vehicle has passed within one hour the cost is
-					// zero.
-					bill.registerPassing(timestamp, 0);
 				}
 			}
+			if (!isSameHour) {
+				bill.registerPassing(timestamp, DayCostHelper.getCostForTime(cal));
+			} else {
+				// If the vehicle has passed within one hour the cost is
+				// zero.
+				bill.registerPassing(timestamp, 0);
+			}
+
 		}
 	}
 

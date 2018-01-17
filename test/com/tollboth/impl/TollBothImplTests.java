@@ -238,4 +238,46 @@ public class TollBothImplTests {
 		b = mUnitUnderTests.calculateCost(mCar.getLicensePlate());
 		Assert.assertEquals(0, b.getTotalCost());
 	}
+	
+	@Test
+	public void whenRegisteringMultiplePassingsGivenCarAndMultipleDaysThenCostIsCorrect() {
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.set(Calendar.YEAR, 2013);
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
+		// holiday = free
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		cal.set(Calendar.MINUTE, 32);
+		cal.set(Calendar.HOUR_OF_DAY, 12);
+		mClock.setClock(cal.getTimeInMillis());
+		mUnitUnderTests.registerPassing(mCar.getLicensePlate());
+		
+
+		cal.set(Calendar.DAY_OF_MONTH, 3);
+		cal.set(Calendar.MINUTE, 14);
+		cal.set(Calendar.HOUR_OF_DAY, 8);
+		mClock.setClock(cal.getTimeInMillis());
+		mUnitUnderTests.registerPassing(mCar.getLicensePlate());
+		int expected = DayCostHelper.getCostForTime(cal);
+		
+
+		// weekend = free
+		cal.set(Calendar.DAY_OF_MONTH, 20);
+		cal.set(Calendar.MINUTE, 10);
+		cal.set(Calendar.HOUR_OF_DAY, 17);
+		mClock.setClock(cal.getTimeInMillis());
+		mUnitUnderTests.registerPassing(mCar.getLicensePlate());
+		
+
+		cal.set(Calendar.DAY_OF_MONTH, 24);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 15);
+		mClock.setClock(cal.getTimeInMillis());
+		mUnitUnderTests.registerPassing(mCar.getLicensePlate());
+
+		expected += DayCostHelper.getCostForTime(cal);
+
+		Bill b = mUnitUnderTests.calculateCost(mCar.getLicensePlate());
+		Assert.assertEquals(expected, b.getTotalCost());
+		System.out.println(b.toString());
+	}
 }

@@ -1,7 +1,6 @@
 package com.tollboth.model;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.tollboth.Vehicle;
