@@ -72,6 +72,7 @@ public class FreedayHelper {
 			return true;
 		}
 		// Alla helgonsdag
+		// This is actually a weekend, will be caught earlier.
 		if (month == Calendar.NOVEMBER && day == 2) {
 			return true;
 		}
