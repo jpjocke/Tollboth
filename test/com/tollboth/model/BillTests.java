@@ -13,7 +13,7 @@ public class BillTests {
 	
 	@Before
 	public void setup(){
-		mVehicle = new VehicleImpl("ABC123", Type.MOTORBIKE);
+		mVehicle = new VehicleImpl("ABC123", Type.CAR);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)

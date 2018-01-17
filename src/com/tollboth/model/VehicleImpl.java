@@ -2,11 +2,27 @@ package com.tollboth.model;
 
 import com.tollboth.Vehicle;
 
+/**
+ * Implementation for a vehicle.
+ * 
+ * @author Joakim
+ *
+ */
 public class VehicleImpl implements Vehicle {
 	private final String mLicensePlate;
 	private final Type mType;
 
-	public VehicleImpl(String licensePlate, Type vehicleType) {
+	/**
+	 * Constructor.
+	 * 
+	 * @param licensePlate
+	 *            License plate for the vehicle.
+	 * @param vehicleType
+	 *            Type for the vehicle.
+	 * @throws IllegalArgumentException
+	 *             If arguments are invalid.
+	 */
+	public VehicleImpl(String licensePlate, Type vehicleType) throws IllegalArgumentException {
 		if (licensePlate == null) {
 			throw new IllegalArgumentException("licensePlate must be set");
 		}
@@ -28,7 +44,7 @@ public class VehicleImpl implements Vehicle {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return mLicensePlate + " of type: " + mType;
 	}
 }

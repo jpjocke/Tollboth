@@ -8,6 +8,12 @@ import com.tollboth.Vehicle;
 import com.tollboth.Vehicle.Type;
 import com.tollboth.model.VehicleImpl;
 
+/**
+ * Mock API for vehicles.
+ * 
+ * @author Joakim
+ *
+ */
 public class VehicleApiMock implements ExternalApiForVehicleInformation {
 	public static String CAR_LP_1 = "ABC123";
 	public static String MC_LP_1 = "DER987";
@@ -22,10 +28,16 @@ public class VehicleApiMock implements ExternalApiForVehicleInformation {
 	@Override
 	public Vehicle getVehicleForLicensePlate(String licensePlate) {
 		Vehicle v = mMockedVehicles.get(licensePlate);
-		if (v == null) {
-			v = new VehicleImpl(licensePlate, Type.CAR);
-		}
 		return v;
 	}
 
+	/**
+	 * Adds a vehicle to the mock.
+	 * 
+	 * @param v
+	 *            Vehicle to mock.
+	 */
+	public void addVehicle(Vehicle v) {
+		mMockedVehicles.put(v.getLicensePlate(), v);
+	}
 }

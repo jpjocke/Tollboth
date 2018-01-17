@@ -2,6 +2,12 @@ package com.tollboth.model;
 
 import java.util.Calendar;
 
+/**
+ * Helper class to keep track of costs during a day.
+ * 
+ * @author Joakim
+ *
+ */
 public class DayCostHelper {
 
 	/**

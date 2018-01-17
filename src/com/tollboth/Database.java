@@ -2,6 +2,13 @@ package com.tollboth;
 
 import java.util.List;
 
+/**
+ * Database interface.
+ * Made for storing data over longer time.
+ * 
+ * @author Joakim
+ *
+ */
 public interface Database {
 	/**
 	 * Register a passing vehicle with the exact timestamp.

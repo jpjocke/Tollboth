@@ -1,6 +1,7 @@
 package com.tollboth.mock;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class DatabaseImplMock implements Database {
 		if (data == null) {
 			data = new ArrayList<>();
 		}
+		
+		Collections.sort(data);
 
 		return data;
 	}

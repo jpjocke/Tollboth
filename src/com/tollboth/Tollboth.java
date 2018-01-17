@@ -2,6 +2,13 @@ package com.tollboth;
 
 import com.tollboth.model.Bill;
 
+/**
+ * API that can register passings from vehicles with a specific license plate.
+ * Cost can be calculated for each license plate at a later stage.
+ * 
+ * @author Joakim
+ *
+ */
 public interface Tollboth {
 	/**
 	 * Register a passing.
