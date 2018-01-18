@@ -52,33 +52,47 @@ public class FreedayHelper {
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 
 		// Nyårsdagen, Trettondagen
-		if (month == Calendar.JANUARY && (day == 1 || day == 6)) {
-			return true;
+		if (month == Calendar.JANUARY) {
+			if ((day == 1 || day == 6)) {
+				return true;
+			}
 		}
 		// Långfredag, Påskdagen
-		if (month == Calendar.MARCH && (day == 29 || day == 31)) {
-			return true;
+		if (month == Calendar.MARCH) {
+			if (day == 29 || day == 31) {
+				return true;
+			}
 		}
 		// Annandag påsk
-		if (month == Calendar.APRIL && day == 1) {
-			return true;
+		if (month == Calendar.APRIL) {
+			if (day == 1) {
+				return true;
+			}
 		}
 		// Första maj, Kristi himmelsfärd, Pingstdagen
-		if (month == Calendar.MAY && (day == 1 || day == 9 || day == 19)) {
-			return true;
+		if (month == Calendar.MAY) {
+			if (day == 1 || day == 9 || day == 19) {
+				return true;
+			}
 		}
 		// Nationaldag, Midsommar
-		if (month == Calendar.JUNE && (day == 6 || day == 22)) {
-			return true;
+		if (month == Calendar.JUNE) {
+			if (day == 6 || day == 22) {
+				return true;
+			}
 		}
 		// Alla helgonsdag
 		// This is actually a weekend, will be caught earlier.
-		if (month == Calendar.NOVEMBER && day == 2) {
-			return true;
+		if (month == Calendar.NOVEMBER) {
+			if (day == 2) {
+				return true;
+			}
 		}
 		// Juldagen, Annandag jul
-		if (month == Calendar.DECEMBER && (day == 25 || day == 26)) {
-			return true;
+		if (month == Calendar.DECEMBER) {
+			if (day == 25 || day == 26) {
+				return true;
+			}
 		}
 		return false;
 	}

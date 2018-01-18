@@ -108,26 +108,26 @@ public class TollBothImpl implements Tollboth {
 				bill.registerPassing(timestamp, 0);
 				continue;
 			}
-			
-			boolean isSameHour = false;
+
 			if (lastPayedTimestamp == -1) {
 				lastPayedTimestamp = timestamp;
-			} else {
-				if (lastPayedTimestamp + FREE_HOUR > timestamp) {
-					isSameHour = true;
-				} else {
-					lastPayedTimestamp = timestamp;
-				}
-			}
-			if (!isSameHour) {
 				bill.registerPassing(timestamp, DayCostHelper.getCostForTime(cal));
-			} else {
+				continue;
+			}
+			
+			if (isPassingWithinFreeHour(lastPayedTimestamp, timestamp)) {
 				// If the vehicle has passed within one hour the cost is
 				// zero.
 				bill.registerPassing(timestamp, 0);
+			} else {
+				lastPayedTimestamp = timestamp;
+				bill.registerPassing(timestamp, DayCostHelper.getCostForTime(cal));
 			}
 
 		}
 	}
 
+	private boolean isPassingWithinFreeHour(long lastPayedTimestamp, long timestamp) {
+		return lastPayedTimestamp + FREE_HOUR > timestamp;
+	}
 }
