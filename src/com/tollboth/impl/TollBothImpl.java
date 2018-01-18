@@ -20,6 +20,7 @@ import com.tollboth.model.FreedayHelper;
  */
 public class TollBothImpl implements Tollboth {
 	private static final long FREE_HOUR = 1000l * 60 * 60;
+	private static final int MAX_COST_PER_DAY = 60;
 	private final Database mDb;
 	private final ExternalApiForVehicleInformation mVehicleApi;
 	private final SystemClock mClock;
@@ -101,8 +102,14 @@ public class TollBothImpl implements Tollboth {
 		// hour.
 		long lastPayedTimestamp = -1;
 		Calendar cal = Calendar.getInstance();
+		MaxDayCalculator mdc = null;
 		for (long timestamp : passings) {
+
 			cal.setTimeInMillis(timestamp);
+			if (mdc == null || !mdc.isSameDay(cal)) {
+				mdc = new MaxDayCalculator(cal);
+			}
+
 			if (FreedayHelper.isDayFree(cal)) {
 				// Free days costs zero.
 				bill.registerPassing(timestamp, 0);
@@ -111,17 +118,19 @@ public class TollBothImpl implements Tollboth {
 
 			if (lastPayedTimestamp == -1) {
 				lastPayedTimestamp = timestamp;
-				bill.registerPassing(timestamp, DayCostHelper.getCostForTime(cal));
+				int cost = DayCostHelper.getCostForTime(cal);
+				bill.registerPassing(timestamp, mdc.registerCost(cost));
 				continue;
 			}
-			
+
 			if (isPassingWithinFreeHour(lastPayedTimestamp, timestamp)) {
 				// If the vehicle has passed within one hour the cost is
 				// zero.
 				bill.registerPassing(timestamp, 0);
 			} else {
 				lastPayedTimestamp = timestamp;
-				bill.registerPassing(timestamp, DayCostHelper.getCostForTime(cal));
+				int cost = DayCostHelper.getCostForTime(cal);
+				bill.registerPassing(timestamp, mdc.registerCost(cost));
 			}
 
 		}
@@ -129,5 +138,61 @@ public class TollBothImpl implements Tollboth {
 
 	private boolean isPassingWithinFreeHour(long lastPayedTimestamp, long timestamp) {
 		return lastPayedTimestamp + FREE_HOUR > timestamp;
+	}
+
+	/**
+	 * Helper class to keep track of maximum cost per day.
+	 * 
+	 * @author Joakim
+	 *
+	 */
+	private class MaxDayCalculator {
+		private final Calendar mDay;
+		private int mCost;
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param cal
+		 *            Calender with the day to use.
+		 */
+		public MaxDayCalculator(Calendar cal) {
+			mDay = (Calendar) cal.clone();
+			mCost = 0;
+		}
+
+		/**
+		 * Checks if this is the same day as the given calendar.
+		 * 
+		 * @param cal
+		 *            Calendar to use.
+		 * @return true if it is the same day.
+		 */
+		public boolean isSameDay(Calendar cal) {
+			if (cal.get(Calendar.YEAR) == mDay.get(Calendar.YEAR)) {
+				if (cal.get(Calendar.DAY_OF_YEAR) == mDay.get(Calendar.DAY_OF_YEAR)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Registers the cost and returns the actual cost based on if todays
+		 * cost has reached the max cost.
+		 * 
+		 * @param cost
+		 *            cost for passing.
+		 * @return actual cost of the passing.
+		 */
+		public int registerCost(int cost) {
+			mCost += cost;
+			if (mCost > MAX_COST_PER_DAY) {
+				// Calculate the rest product by reversing the cost
+				int rest = MAX_COST_PER_DAY - mCost + cost;
+				return Math.max(0, rest);
+			}
+			return cost;
+		}
 	}
 }
